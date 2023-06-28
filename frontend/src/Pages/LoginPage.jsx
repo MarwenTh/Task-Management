@@ -24,7 +24,7 @@ const LoginPage = () => {
     } else {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -42,6 +42,7 @@ const LoginPage = () => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("first name", res.data.user.name.firstName);
         localStorage.setItem("last name", res.data.user.name.lastName);
+        localStorage.setItem("email", res.data.user.email);
         navigate("/dashboard");
       } else {
         navigate("/");

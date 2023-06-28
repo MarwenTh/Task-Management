@@ -69,7 +69,10 @@ const SignUpPage = () => {
           title: "Signed up successfully",
         }).then(() => {
           localStorage.setItem("token", token);
-          navigate("/home");
+          localStorage.setItem("first name", firstName);
+          localStorage.setItem("last name", lastName);
+          localStorage.setItem("email", email);
+          navigate("/dashboard");
         });
       } catch (err) {
         if (err.response) {

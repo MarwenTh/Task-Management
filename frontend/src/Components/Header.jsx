@@ -16,30 +16,30 @@ import Contact from "../Pages/Contact";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [click, setClick] = useState(false);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
 
-  const iconRef = useRef();
-  const menuRef = useRef();
+  const menuItems = [
+    { label: "Settings" },
+    { label: "profile" },
+    { label: "logout", onClick: handleLogout },
+  ];
 
-  window.addEventListener("click", (e) => {
-    if (e.target !== iconRef.current && e.target !== menuRef.current) {
-      setClick(false);
-    }
-  });
-
-  const firstName = localStorage.getItem("first name").charAt(0);
-  const lastName = localStorage.getItem("last name").charAt(0);
+  const firstName = localStorage.getItem("first name");
+  const lastName = localStorage.getItem("last name");
+  const email = localStorage.getItem("email");
+  const firstNameLetter = localStorage.getItem("first name").charAt(0);
+  const lastNameLetter = localStorage.getItem("last name").charAt(0);
   return (
     <div>
       <nav className="bg-black">
@@ -61,7 +61,7 @@ const Header = () => {
                 className={` ${
                   location.pathname === "/dashboard"
                     ? "text-blue-600"
-                    : "hover:text-blue-600 transition-colors duration-200 text-white"
+                    : "hover:text-blue-600 hover:-translate-y-1 transition-all duration-200 text-white"
                 } px-3 py-2 rounded-md text-sm font-medium`}
               >
                 Home
@@ -71,7 +71,7 @@ const Header = () => {
                 className={` ${
                   location.pathname === "/dashboard/about"
                     ? "text-blue-600"
-                    : "hover:text-blue-600 transition-colors duration-200 text-white"
+                    : "hover:text-blue-600 hover:-translate-y-1 transition-all duration-200 text-white"
                 } px-3 py-2 rounded-md text-sm font-medium`}
               >
                 About
@@ -81,7 +81,7 @@ const Header = () => {
                 className={` ${
                   location.pathname === "/dashboard/contact"
                     ? "text-blue-600"
-                    : "hover:text-blue-600 transition-colors duration-200 text-white"
+                    : "hover:text-blue-600 hover:-translate-y-1 transition-all duration-200 text-white"
                 } px-3 py-2 rounded-md text-sm font-medium`}
               >
                 Contact
@@ -91,45 +91,42 @@ const Header = () => {
                 className={`${
                   location.pathname === "/dashboard/profile"
                     ? "text-blue-600"
-                    : "hover:text-blue-600 transition-colors duration-200 text-white"
+                    : "hover:text-blue-600 hover:-translate-y-1 transition-all duration-200 text-white"
                 } px-3 py-2 rounded-md text-sm font-medium`}
               >
                 Profile
               </Link>
-              <div
-                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                onClick={() => setClick(!click)}
-                ref={iconRef}
-              >
-                <FontAwesomeIcon
-                  icon={faUserCircle}
-                  className=" h-6 w-6"
-                  ref={iconRef}
-                />
-              </div>
-              {click ? (
-                <ul
-                  ref={menuRef}
-                  className=" absolute top-10 right-60 mt-2 py-1 w-40 bg-white border border-gray-200 rounded-xl shadow-md"
-                >
-                  <li className=" px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    Settings
-                  </li>
-                  <li className=" px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                    Profile
-                  </li>
-                  <li
-                    className=" px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      handleLogout();
-                      setClick(!click);
-                    }}
-                  >
-                    Logout
-                  </li>
-                </ul>
-              ) : null}
             </div>
+          </div>
+          <div className=" relative">
+            <button
+              onClick={() => setMenuIsOpen(!menuIsOpen)}
+              className=" text-sm rounded-full bg-[#507adc] text-white py-2 px-2"
+            >
+              {firstNameLetter + lastNameLetter}
+            </button>
+            {menuIsOpen && (
+              <ul
+                className={`absolute top-8 right-0 mt-2 py-1 w-52 bg-[#213363] rounded-lg shadow-md text-white text-sm ${
+                  menuIsOpen
+                    ? "opacity-1 translate-y-0 transition-all duration-500 ease-in-out"
+                    : "opacity-0 translate-y-[-10px] transition-all duration-500 ease-in-out"
+                }`}
+              >
+                <li className="px-4 py-2 border-b">
+                  {firstName + " " + lastName} {email}
+                </li>
+                {menuItems.map((item, index) => (
+                  <li
+                    className="px-4 py-2 hover:bg-[#334c8f] cursor-pointer"
+                    key={index}
+                    onClick={item.onClick}
+                  >
+                    {item.label}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </nav>
